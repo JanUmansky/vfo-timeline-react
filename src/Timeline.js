@@ -8,11 +8,15 @@ function Timeline() {
   const [events, setEvents] = useState([]);
   const [isController, setIsController] = useState();
   const [visibility, setVisibility] = useState(false);
+  const [anounce, setAnounce] = useState(false);
+  const [eventName, setEventName] = useState();
 
-  const goToTime = (time)=>{
-    vff.video.goTo(time);
+  const goToTime = (event)=>{
+    vff.video.goTo(event.timestamp);
     vff.video.play();
     setVisibility(false);
+    setEventName(event.name);
+    setAnounce(true);
   }
 
   const togglePlayback = () =>{
@@ -24,6 +28,7 @@ function Timeline() {
     vff.onModeChange(() => {
       console.log('Mode change');
       setIsController(vff.isController());
+
       
     });
 
@@ -38,10 +43,11 @@ function Timeline() {
       <div className="realtive w-screen h-screen overflow-hidden flex portrait:pt-16/9 sm:p-0">
         <div className={`backdrop absolute flex portrait:hidden w-screen h-screen top-0 left-0 from-black/90 to-transparent bg-gradient-to-r transition-opacity duration-500 ${visibility ? 'landscape:opacity-100':'landscape:opacity-0 pointer-events-none'}`} onClick={()=>setVisibility(false)}></div>
         {!visibility && <div className='absolute flex w-screen h-screen top-0 left-0' onClick={togglePlayback}></div>}
+        {anounce && <div onAnimationEnd={()=>setAnounce(false)} className={`${anounce ? 'animate-fade flex': 'hide'} opacity-0 pointer-events-none absolute w-full h-full top-0 left-0 justify-center items-center text-[5vw] text-white font-bold`} style={{textShadow:'0 0 30px rgba(0,0,0,0.75)'}}>{eventName}</div>}
         <div className={`timeline h-full w-full landscape:w-1/2 sm:w-1/2 flex items-center transition-all duration-500 ease-in-out ${visibility ? '':'landscape:-translate-x-full landscape:opacity-0 landscape:pointer-events-none'}`}>
           <div className={`events-wrap flex-col px-[2vw] pb-[10vw] h-full w-full sm:w-[25vw] overflow-y-auto relative z-10 scrollbar-thin scrollbar-track-gray-900 scrollbar-thumb-gray-700`} dir="rtl" style={{WebkitMaskImage: 'linear-gradient(rgb(0, 0, 0) 75vh, transparent 95vh)'}}>
             {events.map((event) => (
-              <TimelineItem key={event.timestamp}  goToTime={goToTime} event={event}  />
+              <TimelineItem key={event.timestamp} goToTime={goToTime} event={event}  />
             ))}
           </div>
           <div onClick={()=>setVisibility(false)} className={`btn-close bg-[#007AC2] text-white portrait:hidden flex rounded-[2vw] cursor-pointer px-[1vw] py-[0.65vw] hover:bg-[#2e95d0] ml-[1vw] flex-shrink-0 flex-grow-0 flex-auto justify-center items-center z-10`}>

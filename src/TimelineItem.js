@@ -2,7 +2,7 @@ import React from "react";
 import { PlayArrowRounded } from '@mui/icons-material';
 export function TimelineItem({ goToTime, event, isMobile }) {
   return (
-    <div dir="ltr" className="my-[2vw] group cursor-pointer" onClick={() => goToTime(event.timestamp)}>
+    <div dir="ltr" className="my-[2vw] group cursor-pointer" onClick={() => goToTime(event)}>
       <div className={`font-bold text-white/80 group-hover:text-white select-none text-base md:text-[1.25vw] md:leading-[2vw] portrait:text-xl`}>
         {event.name}
       </div>
